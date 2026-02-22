@@ -1,667 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TVH — NFC Digital Business Card</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --tvh-dark: #1a1a1a;
-    --tvh-mid: #2c2c2c;
-    --tvh-yellow: #c8d400;
-    --tvh-blue: #009fda;
-    --tvh-white: #f5f5f3;
-    --tvh-grey: #8a8a8a;
-    --tvh-border: rgba(255,255,255,0.07);
-  }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#ffffff"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <title>John Smith — Plumber</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      /* ── TVH exact palette ── */
+      --teal:       #00a99d;   /* TVH primary brand teal  */
+      --teal-dark:  #008a7f;   /* hover / darker teal     */
+      --teal-light: #e6f6f5;   /* teal tint bg            */
+      --charcoal:   #1d1d1d;   /* TVH dark footer         */
+      --charcoal2:  #252525;   /* slightly lighter dark   */
+      --white:      #ffffff;
+      --offwhite:   #f5f5f5;   /* alt section bg          */
+      --border:     #e0e0e0;
+      --text:       #333333;
+      --muted:      #777777;
+      --safe-top:   env(safe-area-inset-top, 0px);
+      --safe-bot:   env(safe-area-inset-bottom, 0px);
+    }
 
-  body {
-    background: var(--tvh-dark);
-    color: var(--tvh-white);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 32px 16px;
-  }
+    html, body {
+      font-family: 'Open Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-  /* Animated background mesh */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 600px 400px at 80% 10%, rgba(200, 212, 0, 0.08) 0%, transparent 70%),
-      radial-gradient(ellipse 500px 500px at 10% 80%, rgba(0, 159, 218, 0.07) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
+    /* ─── TOP UTILITY BAR (like TVH's email/phone bar) ── */
+    .top-bar {
+      background: var(--charcoal);
+      padding: calc(10px + var(--safe-top)) 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .top-bar a {
+      color: rgba(255,255,255,.7);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .top-bar a svg { width: 13px; height: 13px; stroke: var(--teal); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .top-bar .sep { color: rgba(255,255,255,.2); font-size: 14px; }
 
-  .page-wrap {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 480px;
-    animation: fadeUp 0.8s ease both;
-  }
+    /* ─── HERO ────────────────────────────────────────── */
+    .hero {
+      background: var(--white);
+      padding: 36px 20px 32px;
+      text-align: center;
+      border-bottom: 3px solid var(--teal);
+      animation: fadeUp .5s ease both;
+    }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    .avatar-wrap {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      border: 3px solid var(--teal);
+      background: var(--teal-light);
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px;
+      overflow: hidden;
+    }
+    .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* Top bar */
-  .top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 32px;
-    animation: fadeUp 0.8s 0.05s ease both;
-    opacity: 0;
-  }
+    .hero-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
 
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+    .hero-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      color: var(--charcoal);
+      margin-bottom: 10px;
+    }
 
-  .logo-icon {
-    display: flex;
-    gap: 3px;
-    align-items: flex-end;
-  }
+    .hero-tagline {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+    .hero-tagline strong { color: var(--charcoal); font-weight: 600; }
 
-  .logo-icon span {
-    display: block;
-  }
+    /* ─── STATS BAR ────────────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      background: var(--teal);
+      animation: fadeUp .5s .06s ease both;
+    }
+    .stat {
+      flex: 1;
+      text-align: center;
+      padding: 14px 6px;
+      border-right: 1px solid rgba(255,255,255,.25);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--white);
+      display: block;
+      line-height: 1;
+    }
+    .stat-lbl {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.8);
+      margin-top: 4px;
+      display: block;
+    }
 
-  .tri-yellow {
-    width: 0; height: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-bottom: 20px solid var(--tvh-yellow);
-    margin-bottom: 0;
-  }
+    /* ─── SECTIONS ─────────────────────────────────────── */
+    .section { padding: 30px 18px; }
+    .section.alt { background: var(--offwhite); }
+    .section + .section { border-top: 1px solid var(--border); }
 
-  .tri-blue {
-    width: 0; height: 0;
-    border-left: 9px solid transparent;
-    border-right: 9px solid transparent;
-    border-bottom: 15px solid var(--tvh-blue);
-    margin-bottom: 2px;
-  }
+    .sec-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .sec-label span {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+    .sec-label .ln { flex: 1; height: 1px; background: var(--border); }
 
-  .logo-text {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 26px;
-    letter-spacing: -0.5px;
-    color: var(--tvh-white);
-  }
+    /* ─── CONTACT ──────────────────────────────────────── */
+    .contact-list { display: flex; flex-direction: column; gap: 10px; }
 
-  .nfc-badge {
-    font-family: 'Syne', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--tvh-grey);
-    border: 1px solid var(--tvh-border);
-    padding: 5px 10px;
-    border-radius: 4px;
-  }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--teal);
+      border-radius: 4px;
+      padding: 15px 16px;
+      min-height: 62px;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .15s, border-left-color .15s;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+    .contact-item:active { background: var(--teal-light); }
 
-  /* Card */
-  .card {
-    background: var(--tvh-mid);
-    border: 1px solid var(--tvh-border);
-    border-radius: 20px;
-    overflow: hidden;
-    animation: fadeUp 0.8s 0.15s ease both;
-    opacity: 0;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-  }
+    .ci-icon {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--teal-light);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .ci-icon svg { width: 17px; height: 17px; stroke: var(--teal); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-  .card-header {
-    background: linear-gradient(135deg, #232323 0%, #1e1e1e 100%);
-    padding: 36px 32px 28px;
-    border-bottom: 1px solid var(--tvh-border);
-    position: relative;
-    overflow: hidden;
-  }
+    .ci-text { flex: 1; display: flex; flex-direction: column; }
+    .ci-lbl { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+    .ci-val { font-size: 15px; font-weight: 600; color: var(--charcoal); }
+    .ci-arr { color: var(--teal); font-size: 22px; font-weight: 300; }
 
-  .card-header::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--tvh-blue), var(--tvh-yellow));
-  }
+    /* ─── SERVICES ─────────────────────────────────────── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .svc-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--teal);
+      border-radius: 4px;
+      padding: 18px 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+    .svc-card .icon { font-size: 22px; display: block; margin-bottom: 10px; }
+    .svc-card h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--charcoal);
+      margin-bottom: 5px;
+    }
+    .svc-card p { font-size: 11px; color: var(--muted); line-height: 1.6; }
 
-  .card-header::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 160px; height: 160px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(200,212,0,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
+    /* ─── PORTFOLIO ─────────────────────────────────────── */
+    .port-scroll {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      margin: 0 -18px;
+      padding: 0 18px 4px;
+      scrollbar-width: none;
+    }
+    .port-scroll::-webkit-scrollbar { display: none; }
 
-  .avatar-row {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
+    .port-card {
+      flex-shrink: 0;
+      width: 210px;
+      aspect-ratio: 4/3;
+      border-radius: 4px;
+      background: var(--offwhite);
+      border: 1px solid var(--border);
+      scroll-snap-align: start;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .port-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-  .avatar {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--tvh-blue), rgba(0,159,218,0.4));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 22px;
-    color: #fff;
-    flex-shrink: 0;
-    border: 2px solid rgba(255,255,255,0.1);
-  }
+    .port-ph {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 9px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .port-ph svg { width: 26px; height: 26px; stroke: var(--border); fill: none; stroke-width: 1.4; }
 
-  .name-block h1 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 22px;
-    line-height: 1.15;
-    letter-spacing: -0.3px;
-    color: var(--tvh-white);
-  }
+    .swipe-hint {
+      font-size: 10px;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
 
-  .name-block .title {
-    font-size: 13px;
-    color: var(--tvh-grey);
-    margin-top: 3px;
-    font-weight: 400;
-  }
+    /* ─── SOCIAL ────────────────────────────────────────── */
+    .social-list { display: flex; flex-direction: column; gap: 10px; }
 
-  .company-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--charcoal);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 15px 16px;
+      min-height: 56px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .3px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .social-btn:active { background: var(--teal-light); }
+    .s-ico { width: 36px; height: 36px; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .s-ico svg { width: 18px; height: 18px; }
+    .s-name { flex: 1; }
+    .s-arr { color: var(--teal); font-size: 22px; font-weight: 300; }
 
-  .company-line .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--tvh-yellow);
-    flex-shrink: 0;
-  }
+    /* ─── STICKY CTA ────────────────────────────────────── */
+    .sticky-cta {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      gap: 10px;
+      padding: 12px 16px calc(12px + var(--safe-bot));
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -4px 16px rgba(0,0,0,.08);
+    }
+    .cta-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 15px 10px;
+      border-radius: 3px;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity .15s, transform .15s;
+    }
+    .cta-btn:active { opacity: .85; transform: scale(.97); }
+    .cta-call { background: var(--teal); color: var(--white); }
+    .cta-sms  { background: var(--charcoal); color: var(--white); }
+    .cta-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-  .company-line span {
-    font-family: 'Syne', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    color: var(--tvh-yellow);
-  }
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      background: var(--charcoal);
+      color: rgba(255,255,255,.6);
+      text-align: center;
+      padding: 28px 20px calc(96px + var(--safe-bot));
+      border-top: 3px solid var(--teal);
+    }
+    .f-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .f-tagline {
+      font-size: 11px;
+      color: var(--teal);
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+    .f-details {
+      font-size: 10px;
+      color: rgba(255,255,255,.4);
+      letter-spacing: .5px;
+      line-height: 1.8;
+    }
+    .f-line { width: 36px; height: 2px; background: var(--teal); margin: 10px auto; }
 
-  /* Contact items */
-  .contacts {
-    padding: 8px 0;
-  }
-
-  .contact-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 32px;
-    border-bottom: 1px solid var(--tvh-border);
-    text-decoration: none;
-    transition: background 0.2s ease;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .contact-item:last-child { border-bottom: none; }
-
-  .contact-item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, rgba(0,159,218,0.06) 0%, transparent 60%);
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  .contact-item:hover::before { opacity: 1; }
-  .contact-item:active { background: rgba(255,255,255,0.03); }
-
-  .icon-wrap {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--tvh-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: border-color 0.2s, background 0.2s;
-  }
-
-  .contact-item:hover .icon-wrap {
-    border-color: rgba(0,159,218,0.35);
-    background: rgba(0,159,218,0.1);
-  }
-
-  .icon-wrap svg {
-    width: 17px; height: 17px;
-    fill: none;
-    stroke: var(--tvh-blue);
-    stroke-width: 1.7;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .contact-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .contact-info .label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--tvh-grey);
-    margin-bottom: 2px;
-    font-weight: 500;
-  }
-
-  .contact-info .value {
-    font-size: 14.5px;
-    color: var(--tvh-white);
-    font-weight: 400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .arrow-icon {
-    color: var(--tvh-grey);
-    flex-shrink: 0;
-    transition: transform 0.2s, color 0.2s;
-  }
-
-  .contact-item:hover .arrow-icon {
-    transform: translateX(3px);
-    color: var(--tvh-blue);
-  }
-
-  /* Save button */
-  .save-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: calc(100% - 48px);
-    margin: 20px 24px;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--tvh-yellow), #a8b300);
-    border: none;
-    border-radius: 12px;
-    color: #1a1a1a;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-    box-shadow: 0 8px 24px rgba(200,212,0,0.25);
-    animation: fadeUp 0.8s 0.25s ease both;
-    opacity: 0;
-  }
-
-  .save-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(200,212,0,0.35);
-    filter: brightness(1.05);
-  }
-
-  .save-btn:active { transform: translateY(0); }
-
-  .save-btn svg {
-    width: 16px; height: 16px;
-    stroke: #1a1a1a;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
-  }
-
-  /* Divider with share row */
-  .share-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 0 24px 8px;
-    animation: fadeUp 0.8s 0.3s ease both;
-    opacity: 0;
-  }
-
-  .share-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: 1px solid var(--tvh-border);
-    background: rgba(255,255,255,0.03);
-    color: var(--tvh-grey);
-    font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s, background 0.2s;
-    text-decoration: none;
-  }
-
-  .share-btn svg {
-    width: 14px; height: 14px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 1.7;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
-  }
-
-  .share-btn:hover {
-    border-color: rgba(255,255,255,0.18);
-    color: var(--tvh-white);
-    background: rgba(255,255,255,0.06);
-  }
-
-  /* Footer */
-  .footer {
-    text-align: center;
-    margin-top: 28px;
-    font-size: 11px;
-    color: #444;
-    letter-spacing: 0.5px;
-    animation: fadeUp 0.8s 0.35s ease both;
-    opacity: 0;
-  }
-
-  .footer span {
-    color: var(--tvh-blue);
-    opacity: 0.7;
-  }
-
-  /* NFC pulse animation */
-  .nfc-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    justify-content: center;
-    margin-bottom: 24px;
-    animation: fadeUp 0.8s 0.1s ease both;
-    opacity: 0;
-  }
-
-  .pulse-dot {
-    position: relative;
-    width: 8px; height: 8px;
-  }
-
-  .pulse-dot::before, .pulse-dot::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: var(--tvh-yellow);
-  }
-
-  .pulse-dot::after {
-    animation: pulse-ring 2s ease-out infinite;
-    background: transparent;
-    border: 2px solid var(--tvh-yellow);
-  }
-
-  @keyframes pulse-ring {
-    0%   { transform: scale(1); opacity: 0.8; }
-    100% { transform: scale(3.5); opacity: 0; }
-  }
-
-  .nfc-label {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--tvh-grey);
-    font-weight: 500;
-  }
-
-  /* Business section divider */
-  .section-sep {
-    padding: 6px 32px 0;
-  }
-
-  .section-sep .sep-label {
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--tvh-grey);
-    font-weight: 500;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--tvh-border);
-  }
-
-  @media (max-width: 400px) {
-    .card-header { padding: 28px 22px 22px; }
-    .contact-item { padding: 16px 22px; }
-    .contact-info .value { font-size: 13.5px; }
-  }
-</style>
+    /* ─── ANIMATION ──────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .section:nth-of-type(1) { animation: fadeUp .5s .1s ease both; }
+    .section:nth-of-type(2) { animation: fadeUp .5s .15s ease both; }
+    .section:nth-of-type(3) { animation: fadeUp .5s .2s ease both; }
+    .section:nth-of-type(4) { animation: fadeUp .5s .25s ease both; }
+  </style>
 </head>
 <body>
 
-<div class="page-wrap">
-
-  <!-- Top bar -->
-  <!-- <div class="top-bar">
-    <div class="logo-area">
-      <div class="logo-icon">
-        <span class="tri-blue"></span>
-        <span class="tri-yellow"></span>
-      </div>
-      <span class="logo-text">TVH</span>
-    </div>
-    <div class="nfc-badge">Digital Card</div>
-  </div> -->
-
-  <!-- NFC indicator -->
-  <div class="nfc-indicator">
-    <div class="pulse-dot"></div>
-    <span class="nfc-label">NFC Tap — Contact Shared</span>
+  <!-- ═══ TOP BAR ═══════════════════════════════════════ -->
+  <div class="top-bar">
+    <a href="tel:+10000000000"><!-- ← YOUR PHONE -->
+      <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.02 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      (000) 000-0000<!-- ← YOUR PHONE -->
+    </a>
+    <span class="sep">|</span>
+    <a href="mailto:you@email.com"><!-- ← YOUR EMAIL -->
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      you@email.com<!-- ← YOUR EMAIL -->
+    </a>
   </div>
 
-  <!-- Card -->
-  <div class="card">
-    <div class="card-header">
-      <div class="avatar-row">
-        <div class="avatar">JL</div>
-        <div class="name-block">
-          <h1>Joe La Rosa</h1>
-          <div class="title">...</div>
-        </div>
-      </div>
-      <div class="company-line">
-        <div class="dot"></div>
-        <span>South Australia</span>
-      </div>
+  <!-- ═══ HERO ══════════════════════════════════════════ -->
+  <div class="hero">
+    <div class="avatar-wrap">
+      <!-- Replace emoji with: <img src="YOUR_PHOTO_URL" alt="Name"> -->
+      🔧
     </div>
+    <p class="hero-eyebrow">Licensed &amp; Insured · ABN 000 000 000</p><!-- ← YOUR TRADE/ABN -->
+    <h1 class="hero-name">John Smith</h1><!-- ← YOUR NAME -->
+    <p class="hero-tagline"><strong>Commercial &amp; Residential Plumbing.</strong><br>Quality work, honest pricing, jobs done right the first time.</p><!-- ← YOUR TAGLINE -->
+  </div>
 
-    <div class="contacts">
+  <!-- ═══ STATS BAR ════════════════════════════════════ -->
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-num">12+</span><!-- ← YEARS -->
+      <span class="stat-lbl">Years Exp.</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">500+</span><!-- ← JOBS -->
+      <span class="stat-lbl">Jobs Done</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">5★</span>
+      <span class="stat-lbl">Rated</span>
+    </div>
+  </div>
 
-      <!-- Personal contact -->
-      <div class="section-sep">
-        <div class="sep-label">Direct Contact</div>
-      </div>
+  <!-- ═══ CONTACT ═══════════════════════════════════════ -->
+  <div class="section">
+    <div class="sec-label">
+      <span>Contact</span><div class="ln"></div>
+    </div>
+    <div class="contact-list">
 
-      <a class="contact-item" href="tel:+61400000000">
-        <div class="icon-wrap">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.09 5.18 2 2 0 015.07 3h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.09 10.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      <a class="contact-item" href="tel:+10000000000"><!-- ← YOUR PHONE -->
+        <div class="ci-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.02 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
         </div>
-        <div class="contact-info">
-          <div class="label">Mobile</div>
-          <div class="value">+61 400 000 000</div>
+        <div class="ci-text">
+          <span class="ci-lbl">Phone</span>
+          <span class="ci-val">(000) 000-0000</span><!-- ← YOUR PHONE -->
         </div>
-        <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="ci-arr">›</span>
       </a>
 
-      <a class="contact-item" href="mailto:j.desmedt@tvh.com">
-        <div class="icon-wrap">
-          <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+      <a class="contact-item" href="mailto:you@email.com"><!-- ← YOUR EMAIL -->
+        <div class="ci-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
-        <div class="contact-info">
-          <div class="label">Email</div>
-          <div class="value">@tvhs.com</div>
+        <div class="ci-text">
+          <span class="ci-lbl">Email</span>
+          <span class="ci-val">you@email.com</span><!-- ← YOUR EMAIL -->
         </div>
-        <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="ci-arr">›</span>
       </a>
 
-      <!-- <a class="contact-item" href="https://www.linkedin.com/in/jamesdesmedt" target="_blank">
-        <div class="icon-wrap">
-          <svg viewBox="0 0 24 24" stroke="var(--tvh-blue)"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-        </div>
-        <div class="contact-info">
-          <div class="label">LinkedIn</div>
-          <div class="value">linkedin.com/in/jamesdesmedt</div>
-        </div>
-        <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </a> -->
-
-      <!-- Business -->
-      <div class="section-sep">
-        <div class="sep-label">Business</div>
-      </div>
-
-      <a class="contact-item" href="tel:+641300557999">
-        <div class="icon-wrap">
-          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </div>
-        <div class="contact-info">
-          <div class="label">Head Office</div>
-          <div class="value">+64 1300 557 999</div>
-        </div>
-        <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
-
-      <a class="contact-item" href="https://tvhs.com.au/" target="_blank">
-        <div class="icon-wrap">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-        </div>
-        <div class="contact-info">
-          <div class="label">Website</div>
-          <div class="value">www.tvhs.com.au</div>
-        </div>
-        <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
-
-      <a class="contact-item" href="https://maps.google.com/?q=Brabantstraat+15,+8790+Waregem,+Belgium" target="_blank">
-        <div class="icon-wrap">
+      <a class="contact-item" href="https://maps.google.com/?q=Your+City" target="_blank">
+        <div class="ci-icon">
           <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
         </div>
-        <div class="contact-info">
-          <div class="label">Address</div>
-          <div class="value">Adelaide, South Australia</div>
+        <div class="ci-text">
+          <span class="ci-lbl">Service Area</span>
+          <span class="ci-val">Your City, State</span><!-- ← YOUR CITY -->
         </div>
-        <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="ci-arr">›</span>
       </a>
 
     </div>
   </div>
 
-  <!-- Save contact button -->
-  <a class="save-btn" href="#" onclick="saveContact(event)">
-    <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-    Save to Contacts
-  </a>
-
-  <!-- Share row -->
-  <div class="share-row">
-    <a class="share-btn" href="mailto:?subject=TVH%20Contact%20%E2%80%94%20James%20De%20Smedt&body=I%27d%20like%20to%20share%20this%20contact%20with%20you.%0Ahttps%3A%2F%2Fcard.tvh.com%2Fjdesmedt">
-      <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
-      Share via Email
-    </a>
-    <button class="share-btn" onclick="copyLink()">
-      <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-      Copy Link
-    </button>
+  <!-- ═══ SERVICES ══════════════════════════════════════ -->
+  <div class="section alt">
+    <div class="sec-label">
+      <span>Our Services</span><div class="ln"></div>
+    </div>
+    <div class="services-grid">
+      <!-- ← Edit icon, title, and description for each card -->
+      <div class="svc-card">
+        <span class="icon">🚿</span>
+        <h3>Installations</h3>
+        <p>Fixtures, appliances &amp; new builds done right.</p>
+      </div>
+      <div class="svc-card">
+        <span class="icon">🔧</span>
+        <h3>Repairs</h3>
+        <p>Leaks, clogs &amp; burst pipes fixed fast.</p>
+      </div>
+      <div class="svc-card">
+        <span class="icon">🏗️</span>
+        <h3>Renovations</h3>
+        <p>Bathroom &amp; kitchen remodels.</p>
+      </div>
+      <div class="svc-card">
+        <span class="icon">🚨</span>
+        <h3>Emergency</h3>
+        <p>Available 24/7 for urgent call-outs.</p>
+      </div>
+    </div>
   </div>
 
-  <!-- Footer -->
-  <div class="footer">Powered by <span>TVHS Digital</span> — NFC Business Card</div>
+  <!-- ═══ PORTFOLIO ═════════════════════════════════════ -->
+  <div class="section">
+    <div class="sec-label">
+      <span>Our Work</span><div class="ln"></div>
+    </div>
+    <div class="port-scroll">
+      <!-- Replace placeholders with: <img src="YOUR_IMAGE_URL" alt="description"> inside each port-card -->
+      <div class="port-card">
+        <div class="port-ph">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Add Photo
+        </div>
+      </div>
+      <div class="port-card">
+        <div class="port-ph">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Add Photo
+        </div>
+      </div>
+      <div class="port-card">
+        <div class="port-ph">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Add Photo
+        </div>
+      </div>
+      <div class="port-card">
+        <div class="port-ph">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Add Photo
+        </div>
+      </div>
+    </div>
+    <p class="swipe-hint">Swipe for more →</p>
+  </div>
 
-</div>
+  <!-- ═══ SOCIAL ════════════════════════════════════════ -->
+  <div class="section alt">
+    <div class="sec-label">
+      <span>Find Us Online</span><div class="ln"></div>
+    </div>
+    <div class="social-list">
 
-<script>
-  function saveContact(e) {
-    e.preventDefault();
-    const vcard = `BEGIN:VCARD
-VERSION:3.0
-FN:James De Smedt
-ORG:TVH Group NV
-TITLE:Regional Sales Manager - APAC
-TEL;TYPE=CELL:+61400000000
-TEL;TYPE=WORK:+3256433011
-EMAIL;TYPE=WORK:j.desmedt@tvh.com
-URL:https://www.tvh.com
-ADR;TYPE=WORK:;;Brabantstraat 15;Waregem;;8790;Belgium
-NOTE:TVH — Parts & More
-END:VCARD`;
+      <a class="social-btn" href="https://facebook.com/YOURPAGE" target="_blank"><!-- ← YOUR PAGE -->
+        <div class="s-ico" style="background:#e8f0fb">
+          <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </div>
+        <span class="s-name">Facebook</span>
+        <span class="s-arr">›</span>
+      </a>
 
-    const blob = new Blob([vcard], { type: 'text/vcard' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'James_De_Smedt_TVH.vcf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
+      <a class="social-btn" href="https://instagram.com/YOURHANDLE" target="_blank"><!-- ← YOUR HANDLE -->
+        <div class="s-ico" style="background:#fdf0f8">
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#ig)" stroke-width="1.8">
+            <defs>
+              <linearGradient id="ig" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#f09433"/>
+                <stop offset="50%" stop-color="#e6683c"/>
+                <stop offset="100%" stop-color="#bc1888"/>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="#e6683c" stroke="none"/>
+          </svg>
+        </div>
+        <span class="s-name">Instagram</span>
+        <span class="s-arr">›</span>
+      </a>
 
-  function copyLink() {
-    const link = 'https://card.tvh.com/jdesmedt';
-    navigator.clipboard.writeText(link).then(() => {
-      const btn = document.querySelector('[onclick="copyLink()"]');
-      const orig = btn.innerHTML;
-      btn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied`;
-      btn.style.color = '#c8d400';
-      btn.style.borderColor = 'rgba(200,212,0,0.3)';
-      setTimeout(() => {
-        btn.innerHTML = orig;
-        btn.style.color = '';
-        btn.style.borderColor = '';
-      }, 2000);
-    }).catch(() => {
-      alert('Link: https://card.tvh.com/jdesmedt');
-    });
-  }
-</script>
+      <a class="social-btn" href="https://google.com/maps/place/YOURBUSINESS" target="_blank"><!-- ← YOUR LISTING -->
+        <div class="s-ico" style="background:#fdecea">
+          <svg viewBox="0 0 24 24" width="18" height="18">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
+            <circle cx="12" cy="9" r="2.5" fill="#fff"/>
+          </svg>
+        </div>
+        <span class="s-name">Google Reviews</span>
+        <span class="s-arr">›</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════ -->
+  <footer>
+    <div class="f-name">John Smith</div><!-- ← YOUR NAME -->
+    <div class="f-tagline">"Doing things right, every time."</div><!-- ← YOUR MOTTO -->
+    <div class="f-line"></div>
+    <div class="f-details">
+      Plumber · Lic No. 000000 · ABN 000 000 000<br><!-- ← YOUR DETAILS -->
+      © 2025 John Smith · All rights reserved<!-- ← YOUR NAME & YEAR -->
+    </div>
+  </footer>
+
+  <!-- ═══ STICKY CTA ════════════════════════════════════ -->
+  <div class="sticky-cta">
+    <a class="cta-btn cta-call" href="tel:+10000000000"><!-- ← YOUR PHONE -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.02 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+      </svg>
+      Call Now
+    </a>
+    <a class="cta-btn cta-sms" href="sms:+10000000000"><!-- ← YOUR PHONE -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+      Text Me
+    </a>
+  </div>
 
 </body>
 </html>
